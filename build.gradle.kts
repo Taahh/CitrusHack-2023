@@ -16,4 +16,6 @@ dependencies {
     implementation("org.springframework:spring-core")
     implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
+    implementation("com.github.docker-java:docker-java:3.3.0")
 }
