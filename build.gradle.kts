@@ -18,4 +18,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
     implementation("com.github.docker-java:docker-java:3.3.0")
+    implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.0")
+
+    implementation("org.projectlombok:lombok:1.18.26")
+    annotationProcessor("org.projectlombok:lombok:1.18.26")
 }
