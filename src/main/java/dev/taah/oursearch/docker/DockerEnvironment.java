@@ -12,7 +12,6 @@ import lombok.experimental.Accessors;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * @author Taah

@@ -1,23 +1,12 @@
 package dev.taah.oursearch;
 
-import com.github.dockerjava.api.command.CreateContainerResponse;
-import com.github.dockerjava.api.command.InspectContainerResponse;
-import com.github.dockerjava.api.command.LogContainerCmd;
-import com.github.dockerjava.api.command.PingCmd;
-import com.github.dockerjava.api.model.*;
 import dev.taah.oursearch.docker.DockerEnvironment;
 import dev.taah.oursearch.docker.DockerExecution;
-import dev.taah.oursearch.util.LogCallback;
+import dev.taah.oursearch.firebase.FirebaseEnvironment;
 import dev.taah.oursearch.web.WebService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.UUID;
 
 /**
@@ -27,14 +16,24 @@ import java.util.UUID;
  */
 public class OurSearch {
     private static final DockerEnvironment DOCKER_ENVIRONMENT = new DockerEnvironment();
+    private static final FirebaseEnvironment FIREBASE_ENVIRONMENT = new FirebaseEnvironment();
 
     public static void main(String[] args) {
         SpringApplication.run(WebService.class, args);
+
         DOCKER_ENVIRONMENT.runDocker(dockerClient -> {
             DockerExecution execution = new DockerExecution(UUID.randomUUID(), "Taah", "if __name__ == \"__main__\":\n" +
                     "    print(\"aaa\")");
             Pair<Boolean, String> res = execution.execute(dockerClient, DockerExecution.Language.PYTHON);
             System.out.println(res);
         });
+    }
+
+    public static DockerEnvironment dockerEnvironment() {
+        return DOCKER_ENVIRONMENT;
+    }
+
+    public static FirebaseEnvironment firebaseEnvironment() {
+        return FIREBASE_ENVIRONMENT;
     }
 }

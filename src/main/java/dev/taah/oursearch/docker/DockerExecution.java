@@ -2,6 +2,7 @@ package dev.taah.oursearch.docker;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Mount;
 import com.github.dockerjava.api.model.MountType;
@@ -32,6 +33,7 @@ public class DockerExecution {
     static {
         if (!RUNS.exists()) RUNS.mkdir();
     }
+
     private final UUID uuid;
     private final String username;
     private final String code;
@@ -64,7 +66,11 @@ public class DockerExecution {
         client.startContainerCmd(response.getId()).exec();
 
         LogCallback cmd = client.logContainerCmd(response.getId()).withTailAll().withFollowStream(true).withStdOut(true).withStdErr(true).exec(new LogCallback());
-        client.killContainerCmd(response.getId()).exec();
+        try {
+            client.killContainerCmd(response.getId()).exec();
+        } catch (ConflictException ignored) {
+
+        }
         client.removeContainerCmd(response.getId()).exec();
         file.delete();
         return cmd.result();
@@ -76,6 +82,7 @@ public class DockerExecution {
         PYTHON("py");
 
         private final String extension;
+
         Language(String extension) {
             this.extension = extension;
         }

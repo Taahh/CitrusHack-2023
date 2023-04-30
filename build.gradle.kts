@@ -20,6 +20,10 @@ dependencies {
     implementation("com.github.docker-java:docker-java:3.3.0")
     implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.0")
 
+    implementation("com.google.firebase:firebase-admin:9.1.1")
+    implementation("org.json:json:20230227")
+
+
     implementation("org.projectlombok:lombok:1.18.26")
     annotationProcessor("org.projectlombok:lombok:1.18.26")
 }
