@@ -5,19 +5,32 @@ html {
 .room > p {
     position: relative;
     left: 46%;
-    bottom: 90vh;
+    bottom: 48vh;
 
 }
 .members {
     background-color: #867171;
     width: 10%;
-    position: relative;
+    position: fixed;
     left: 90%;
-    bottom: 90vh;
+    bottom: 37vh;
+    height: 50vh;
 }
 
 .members > ul {
     list-style-type: none;
     display: flex;
     flex-direction: column;
+}
+
+#options {
+    position: relative;
+    right: 38.5%;
+    bottom: 4.5vh;
+}
+
+#problems {
+    position: relative;
+    right: 38%;
+    bottom: 4.5vh;
 }
