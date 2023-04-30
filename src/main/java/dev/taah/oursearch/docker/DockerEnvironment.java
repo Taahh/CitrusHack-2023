@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 public class DockerEnvironment {
     private final DockerClientConfig config;
     private final DockerHttpClient httpClient;
+    private final DockerClient dockerClient;
 
     public DockerEnvironment() {
         this.config = DefaultDockerClientConfig.createDefaultConfigBuilder()
@@ -35,13 +36,16 @@ public class DockerEnvironment {
                 .connectionTimeout(Duration.ofSeconds(30))
                 .responseTimeout(Duration.ofSeconds(45))
                 .build();
+
+        this.dockerClient = DockerClientImpl.getInstance(this.config, this.httpClient);
     }
 
     public void runDocker(Consumer<DockerClient> consumer) {
-        try (DockerClient client = DockerClientImpl.getInstance(this.config, this.httpClient)) {
+        /*try (DockerClient client = DockerClientImpl.getInstance(this.config, this.httpClient)) {
             consumer.accept(client);
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
+        }*/
+        consumer.accept(this.dockerClient);
     }
 }

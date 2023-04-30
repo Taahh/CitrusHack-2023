@@ -8,6 +8,7 @@ import dev.taah.oursearch.problems.AbstractProblem;
 import dev.taah.oursearch.room.GameRoom;
 import dev.taah.oursearch.room.RoomManager;
 import dev.taah.oursearch.session.UserSession;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.http.HttpHeaders;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 /**
@@ -48,8 +50,7 @@ public class RoomController {
                 if (!confirm) {
                     return new ResponseEntity<>(gameRoom.members().isEmpty() ? "This action will delete the game room" : "This action will promote the room owner to the first person who joined.", HttpStatus.SEE_OTHER);
                 }
-                if (gameRoom.members().isEmpty())
-                {
+                if (gameRoom.members().isEmpty()) {
                     RoomManager.remove(gameRoom.roomId());
                 } else {
                     gameRoom.owner(gameRoom.members().get(0));
@@ -99,8 +100,7 @@ public class RoomController {
                 if (!confirm) {
                     return new ResponseEntity<>(userGameRoom.members().isEmpty() ? "This action will delete the game room" : "This action will promote the room owner to the first person who joined.", HttpStatus.SEE_OTHER);
                 }
-                if (userGameRoom.members().isEmpty())
-                {
+                if (userGameRoom.members().isEmpty()) {
                     RoomManager.remove(userGameRoom.roomId());
                 } else {
                     userGameRoom.owner(userGameRoom.members().get(0));
@@ -206,4 +206,29 @@ public class RoomController {
         gameRoom.sessions().get(uuid).selected(newLanguage);
         return new ResponseEntity<>(GSON.toJson(gameRoom.sessions().get(uuid)), HttpStatus.OK);
     }
+
+    @PostMapping(value = "/api/rooms/execute", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> executeCode(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody String json) {
+        if (!auth.equals(WebService.authKey())) {
+            return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
+        }
+
+        final JSONObject object = new JSONObject(json);
+        final UUID uuid = UUID.fromString(object.getString("uuid"));
+        final String username = object.getString("username");
+        final DockerExecution.Language language = DockerExecution.Language.valueOf(object.getString("language").toUpperCase());
+        final String code = object.getString("code");
+        final int problemId = object.getInt("problemId");
+
+        System.out.println(code);
+
+        final DockerExecution dockerExecution = new DockerExecution(uuid, username, code);
+        final JSONObject result = new JSONObject();
+        Pair<Boolean, String> res = dockerExecution.execute(OurSearch.dockerEnvironment().dockerClient(), language, problemId);
+        result.put("stderr", res.getKey());
+        result.put("output", res.getValue());
+        System.out.println(result);
+        return new ResponseEntity<>(result.toString(), HttpStatus.OK);
+    }
+
 }

@@ -10,6 +10,8 @@ import dev.taah.oursearch.web.WebService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.boot.SpringApplication;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -30,13 +32,18 @@ public class OurSearch {
 
         final SocketIOServer server = new SocketIOServer(config);
         server.addEventListener("");*/
+    }
 
-        DOCKER_ENVIRONMENT.runDocker(dockerClient -> {
-            DockerExecution execution = new DockerExecution(UUID.randomUUID(), "Taah", "if __name__ == \"__main__\":\n" +
-                    "    print(\"aaa\")");
-            Pair<Boolean, String> res = execution.execute(dockerClient, DockerExecution.Language.PYTHON);
-            System.out.println(res);
-        });
+    public int[] twoSum(int nums[], int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int difference = target - nums[i];
+            if (map.containsKey(difference)) {
+                return new int[]{map.get(difference), i};
+            }
+            map.put(nums[i], i);
+        }
+        return new int[0];
     }
 
     public static DockerEnvironment dockerEnvironment() {

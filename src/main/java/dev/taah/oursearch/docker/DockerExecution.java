@@ -6,16 +6,19 @@ import com.github.dockerjava.api.exception.ConflictException;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Mount;
 import com.github.dockerjava.api.model.MountType;
+import dev.taah.oursearch.OurSearch;
 import dev.taah.oursearch.util.LogCallback;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Accessors;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
@@ -38,16 +41,29 @@ public class DockerExecution {
     private final String username;
     private final String code;
 
-    public Pair<Boolean, String> execute(DockerClient client, Language language) {
+    public Pair<Boolean, String> execute(DockerClient client, Language language, int problemId) {
         File file = new File(RUNS, this.uuid.toString() + "-" + language + "." + language.extension);
         if (file.exists()) {
-            file.mkdir();
+            file.delete();
         }
         if (!file.exists()) {
             try {
                 file.createNewFile();
                 try (FileWriter writer = new FileWriter(file)) {
-                    writer.write(this.code);
+                    switch (problemId) {
+                        case 1 -> {
+                            writer.write(this.code);
+                            writer.append(System.lineSeparator());
+                            String data = IOUtils.toString(OurSearch.class.getResourceAsStream(language == Language.PYTHON ? "/problems/python/solutions/01-two-sum.py" : "/problems/java/solutions/01-two-sum.java"), StandardCharsets.UTF_8.name());
+                            writer.write(data);
+                        }
+                        case 33 -> {
+                            writer.write(this.code);
+                            writer.append(System.lineSeparator());
+                            String data = IOUtils.toString(OurSearch.class.getResourceAsStream("/" + "problems/python/solutions/33-search-in-rotated-sorted-array.py"), StandardCharsets.UTF_8.name());
+                            writer.write(data);
+                        }
+                    }
                     writer.flush();
                 }
             } catch (IOException e) {
@@ -56,9 +72,9 @@ public class DockerExecution {
         }
         String[] path = file.getAbsolutePath().split("/");
         String mounthPath = StringUtils.join(path, "/", 0, path.length - 1);
-        CreateContainerResponse response = client.createContainerCmd("python:3")
+        CreateContainerResponse response = client.createContainerCmd(language == Language.PYTHON ? "python:3" : "openjdk:17-oracle")
                 .withHostConfig(HostConfig.newHostConfig().withMounts(Collections.singletonList(new Mount().withTarget("/src").withType(MountType.BIND).withSource(mounthPath))))
-                .withCmd("python3", "/src/" + file.getName())
+                .withCmd(language == Language.PYTHON ? new String[]{"python3", "/src/" + file.getName()} : new String[]{"sh", "-c", "javac /src/" + file.getName() + " && echo 'hi' && java -ea -cp /src Run"})
                 .withAttachStdin(true)
                 .withAttachStderr(true)
                 .withAttachStdout(true)
@@ -72,7 +88,7 @@ public class DockerExecution {
 
         }
         client.removeContainerCmd(response.getId()).exec();
-        file.delete();
+//        file.delete();
         return cmd.result();
     }
 

@@ -1,8 +1,7 @@
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class Solution {
-    public List<Integer> twoSum(nums: int[], target: int) {
-        return Collections.emptyList();
+class Solution {
+    public int[] twoSum(int nums[], int target) {
+        return new int[0];
     }
 }
