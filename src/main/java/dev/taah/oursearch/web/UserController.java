@@ -5,7 +5,6 @@ import com.google.firebase.auth.UserRecord;
 import dev.taah.oursearch.OurSearch;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.http.HttpHeaders;
-import org.apache.http.auth.AUTH;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,18 +19,13 @@ import java.util.UUID;
  * @since 4:14 PM [29-04-2023]
  */
 
-@CrossOrigin
+//@CrossOrigin
 @RestController
 public class UserController {
 
-    private static final String AUTH_KEY = RandomStringUtils.randomAlphanumeric(16);
-    static {
-        System.out.println("AUTH KEY: " + AUTH_KEY);
-    }
-
     @PutMapping(value = "/api/users/create", consumes = {MediaType.APPLICATION_JSON_VALUE})
     public ResponseEntity<String> putUser(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestBody String json) {
-        if (!auth.equals(AUTH_KEY)) {
+        if (!auth.equals(WebService.authKey())) {
             return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
         }
 
