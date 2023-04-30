@@ -1,0 +1,43 @@
+body {
+    background: linear-gradient(to left top, #f46f00, #d9c91f) fixed;
+}
+.registerForm {
+    margin: auto;
+    background-color: #ebebe9;
+    color: black;
+    font-size: 15px;
+
+    width: 25vw;
+    height: 25vh;
+
+    border-radius: 10px;
+    box-shadow: 0 0 5px 1px black;
+    transform: translateY(25vh);
+
+    padding-left: 7vw;
+    padding-top: 2vh;
+}
+
+
+
+.submitButton {
+    background: lightgreen fixed;
+    border: none;
+    border-radius: 5px;
+    position: relative;
+    top: 10%;
+    width: 11.5vw;
+}
+
+.submitButton:hover {
+    background: #5fe75f fixed;
+    transition: all 0.25s ease;
+    transform: scale(1.1);
+}
+
+.errorMsg {
+    color: #6a0909;
+    position: relative;
+    top: 12%;
+    left: 12%;
+}
