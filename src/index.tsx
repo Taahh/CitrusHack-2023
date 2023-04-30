@@ -2,7 +2,7 @@ import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
+import { createBrowserRouter, createHashRouter, RouterProvider, useNavigate } from "react-router-dom";
 import Register from "./pages/Register";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth} from "firebase/auth"
@@ -30,7 +30,7 @@ const app: FirebaseApp = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <App/>
