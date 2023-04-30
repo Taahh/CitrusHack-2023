@@ -65,7 +65,7 @@ public class RoomController {
     }
 
     @GetMapping(value = "/api/rooms/find/{uid}", consumes = {MediaType.TEXT_PLAIN_VALUE})
-    public ResponseEntity<String> findRoom(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @RequestParam String uid) {
+    public ResponseEntity<String> findRoom(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @PathVariable String uid) {
         if (!auth.equals(WebService.authKey())) {
             return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
         }
