@@ -1,0 +1,20 @@
+body {
+    text-align: center;
+}
+
+.createRoom {
+    color: #000000;
+    border: none;
+    border-radius: 2px;
+    width: 10vw;
+    height: 5vh;
+    background-color: #d9d5d5;
+    font-family: 'Braah One', sans-serif;
+}
+
+.createRoom:hover {
+    transition: all 0.2s ease;
+    transform: scale(1.05);
+    background-color: #ccc8c8;
+    font-family: 'Braah One', sans-serif;
+}

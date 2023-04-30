@@ -1,0 +1,23 @@
+html {
+    overflow: hidden;
+}
+
+.room > p {
+    position: relative;
+    left: 46%;
+    bottom: 90vh;
+
+}
+.members {
+    background-color: #867171;
+    width: 10%;
+    position: relative;
+    left: 90%;
+    bottom: 90vh;
+}
+
+.members > ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: column;
+}

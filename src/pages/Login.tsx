@@ -1,8 +1,9 @@
 import style from "./Login.module.css"
-import { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { getAuthentication } from "../index";
 import { signInWithEmailAndPassword } from "firebase/auth"
 import { useNavigate } from "react-router-dom";
+import TitleComponent from "../components/TitleComponent";
 
 const Login = () => {
     const auth = getAuthentication()
@@ -39,13 +40,16 @@ const Login = () => {
     }
 
     return (
-        <div className={style.loginForm}>
-            <span>Email</span><br/><input type="email" name="email" id="email" className={style.textField} ref={email}/><br/>
-            <span>Password</span><br/><input type="password" name="password" id="password" className={style.textField}
-                                             ref={password}/><br/>
-            <button className={style.submitButton} onClick={handleLogin}>Login</button>
-            <p onClick={() => nav("/register")}>Don't have an account? Click here</p>
-        </div>
+        <Fragment>
+            <TitleComponent />
+            <div className={style.loginForm}>
+                <span>Email</span><br/><input type="email" name="email" id="email" className={style.textField} ref={email}/><br/>
+                <span>Password</span><br/><input type="password" name="password" id="password" className={style.textField}
+                                                 ref={password}/><br/>
+                <button className={style.submitButton} onClick={handleLogin}>Login</button>
+                <p onClick={() => nav("/register")}>Don't have an account? Click here</p>
+            </div>
+        </Fragment>
     )
 }
 

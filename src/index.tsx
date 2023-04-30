@@ -2,11 +2,13 @@ import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, useNavigate } from "react-router-dom";
 import Register from "./pages/Register";
 import { FirebaseApp, initializeApp } from "firebase/app";
 import { getAuth, Auth} from "firebase/auth"
 import Login from "./pages/Login";
+import Room from "./pages/Room";
+import TitleComponent from "./components/TitleComponent";
 
 
 const root = ReactDOM.createRoot(
@@ -40,12 +42,16 @@ const router = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/rooms/:roomId",
+        element: <Room />
     }
 ])
 
+
 root.render(
     <Fragment>
-        <h3 className="webName">OURSEARCH</h3>
         <RouterProvider router={router}/>
     </Fragment>
 );

@@ -1,7 +1,8 @@
 import style from "./Register.module.css"
-import { useRef, useState } from "react";
+import React, { Fragment, useRef, useState } from "react";
 import { getAuthentication } from "../index";
 import { useNavigate } from "react-router-dom";
+import TitleComponent from "../components/TitleComponent";
 
 const Register = () => {
     const auth = getAuthentication()
@@ -54,16 +55,21 @@ const Register = () => {
     }
 
     return (
-        <div className={style.registerForm}>
-            <span>Email</span><br/><input type="email" name="email" id="email" className={style.textField} ref={email}/><br/>
-            <span>Username</span><br/><input type="text" name="username" id="username"
-                                             className={style.textField} ref={username}/><br/>
-            <span>Password</span><br/><input type="password" name="password" id="password" className={style.textField}
-                                             ref={password}/><br/>
-            <button className={style.submitButton} onClick={handleRegister}>Register</button>
+        <Fragment>
+            <TitleComponent />
+            <div className={style.registerForm}>
 
-            <p className={style.errorMsg}>{error}</p>
-        </div>
+                <span>Email</span><br/><input type="email" name="email" id="email" className={style.textField} ref={email}/><br/>
+                <span>Username</span><br/><input type="text" name="username" id="username"
+                                                 className={style.textField} ref={username}/><br/>
+                <span>Password</span><br/><input type="password" name="password" id="password" className={style.textField}
+                                                 ref={password}/><br/>
+                <button className={style.submitButton} onClick={handleRegister}>Register</button>
+
+                <p className={style.errorMsg}>{error}</p>
+            </div>
+        </Fragment>
+
     )
 }
 
