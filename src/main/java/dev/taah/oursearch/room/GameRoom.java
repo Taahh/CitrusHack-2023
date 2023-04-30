@@ -1,11 +1,15 @@
 package dev.taah.oursearch.room;
 
+import com.google.common.collect.Maps;
+import dev.taah.oursearch.session.UserSession;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -20,8 +24,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class GameRoom {
     private final UUID roomId;
+    private final String gameCode = RandomStringUtils.randomAlphabetic(12).toUpperCase();
     private UUID owner;
-
     private final LinkedList<UUID> members = new LinkedList<>();
+    private final transient Map<UUID, UserSession> sessions = Maps.newHashMap();
     private String roomName;
 }

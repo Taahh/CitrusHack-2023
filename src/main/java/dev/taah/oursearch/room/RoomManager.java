@@ -25,6 +25,10 @@ public class RoomManager {
         return gameRooms().get(roomId);
     }
 
+    public static GameRoom getGameRoom(String gameCode) {
+        return gameRooms().values().stream().filter(room -> room.gameCode().equalsIgnoreCase(gameCode)).findFirst().orElse(null);
+    }
+
     public static void remove(UUID roomId) {
         gameRooms().remove(roomId);
     }

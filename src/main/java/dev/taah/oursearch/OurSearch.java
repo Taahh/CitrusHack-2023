@@ -1,8 +1,11 @@
 package dev.taah.oursearch;
 
+import com.corundumstudio.socketio.Configuration;
+import com.corundumstudio.socketio.SocketIOServer;
 import dev.taah.oursearch.docker.DockerEnvironment;
 import dev.taah.oursearch.docker.DockerExecution;
 import dev.taah.oursearch.firebase.FirebaseEnvironment;
+import dev.taah.oursearch.problems.Problems;
 import dev.taah.oursearch.web.WebService;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +23,13 @@ public class OurSearch {
 
     public static void main(String[] args) {
         SpringApplication.run(WebService.class, args);
+
+        /*final Configuration config = new Configuration();
+        config.setHostname("127.0.0.1");
+        config.setPort(8081);
+
+        final SocketIOServer server = new SocketIOServer(config);
+        server.addEventListener("");*/
 
         DOCKER_ENVIRONMENT.runDocker(dockerClient -> {
             DockerExecution execution = new DockerExecution(UUID.randomUUID(), "Taah", "if __name__ == \"__main__\":\n" +

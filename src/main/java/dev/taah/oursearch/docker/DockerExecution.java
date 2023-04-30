@@ -79,7 +79,8 @@ public class DockerExecution {
     @Accessors(fluent = true)
     @Getter
     public enum Language {
-        PYTHON("py");
+        PYTHON("py"),
+        JAVA("java");
 
         private final String extension;
 

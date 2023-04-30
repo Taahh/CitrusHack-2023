@@ -57,4 +57,22 @@ public class UserController {
 
         return new ResponseEntity<>("User created!", HttpStatus.OK);
     }
+
+    @GetMapping("/api/users/get/{uid}")
+    public ResponseEntity<String> getUserInfo(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @PathVariable String uid) {
+        if (!auth.equals(WebService.authKey())) {
+            return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
+        }
+
+        final JSONObject object = new JSONObject();
+
+        try {
+            final UserRecord record = OurSearch.firebaseEnvironment().firebaseAuth().getUser(uid);
+            object.put("username", record.getDisplayName());
+            object.put("email", record.getEmail());
+        } catch (FirebaseAuthException e) {
+            throw new RuntimeException(e);
+        }
+        return new ResponseEntity<>(object.toString(), HttpStatus.OK);
+    }
 }

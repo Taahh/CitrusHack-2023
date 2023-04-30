@@ -20,6 +20,7 @@ dependencies {
     implementation("com.github.docker-java:docker-java:3.3.0")
     implementation("com.github.docker-java:docker-java-transport-httpclient5:3.3.0")
 
+    implementation("com.corundumstudio.socketio:netty-socketio:1.7.23")
     implementation("com.google.firebase:firebase-admin:9.1.1")
     implementation("org.json:json:20230227")
 
