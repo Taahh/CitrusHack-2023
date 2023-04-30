@@ -24,6 +24,7 @@ const Room = () => {
     const [ hasWrittenCode, setHasWrittenCode ] = useState(false)
     const [ output, setOutput ] = useState<string>("")
     const [ errored, setErrored ] = useState(false)
+    const [gameCode, setGameCode] = useState("")
 
     auth.onAuthStateChanged(value => {
         if (!value) {
@@ -75,6 +76,7 @@ const Room = () => {
                         alert(r.status)
                     } else {
                         r.json().then(value => {
+                            setGameCode(value.gameCode)
                             setUsers(prevState => prevState.concat(value["owner"]))
                             setUsers(prevState => prevState.concat(value["members"]))
                             setUsers(prevState => prevState.concat("aa", "b", "c"))
@@ -178,6 +180,7 @@ const Room = () => {
     return (
         <Fragment>
             <TitleComponent/>
+            <h3>Game Code: {gameCode}</h3>
             <div className={"room"}>
                 <Editor height="50vh" width="40vw" defaultLanguage="python" value={writtenCode} theme={"vs-dark"}
                         onChange={updateCode}/>

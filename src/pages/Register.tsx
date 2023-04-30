@@ -50,6 +50,8 @@ const Register = () => {
             if (r.status !== 200) {
                 console.log("not ok")
                 r.text().then(value => setError(value))
+            } else {
+                nav("/login")
             }
         })
     }
