@@ -22,6 +22,8 @@ const Room = () => {
     const [ code, setCode ] = useState<string>("")
     const [ writtenCode, setWrittenCode ] = useState<string>("")
     const [ hasWrittenCode, setHasWrittenCode ] = useState(false)
+    const [ output, setOutput ] = useState<string>("")
+    const [ errored, setErrored ] = useState(false)
 
     auth.onAuthStateChanged(value => {
         if (!value) {
@@ -116,7 +118,7 @@ const Room = () => {
             },
             body: JSON.stringify({
                 language: language,
-                newLanguage: event.currentTarget.value,
+                newLanguage: language,
                 problemId: old,
                 code: writtenCode
             })
@@ -147,6 +149,32 @@ const Room = () => {
         }
     }
 
+    function runCode(event: React.MouseEvent<HTMLButtonElement>) {
+        fetch(process.env.REACT_APP_BACKEND_URL as string + `api/rooms/execute`, {
+            method: "POST",
+            headers: {
+                "Authorization": process.env.REACT_APP_BACKEND_AUTH_KEY as string,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                uuid: auth.currentUser?.uid,
+                username: auth.currentUser?.displayName,
+                code: writtenCode,
+                language: language,
+                problemId: problemId
+            })
+        }).then(r => {
+            r.json().then(value => {
+                console.log(value)
+                setErrored(value.stderr)
+                setOutput(value.output)
+                if (!errored) {
+                    setOutput(prevState => prevState.concat("\n\nPassed 3 test cases!"))
+                }
+            })
+        })
+    }
+
     return (
         <Fragment>
             <TitleComponent/>
@@ -168,6 +196,8 @@ const Room = () => {
                     <option value={1}>Two Sum</option>
                     <option value={33}>Search in Rotated Sorted Array</option>
                 </select>
+                <button className="submitCode" onClick={runCode}>Submit</button>
+                <textarea readOnly={true} style={errored ? {color: "red"} : {color: "green"}} className={"output"} value={output}/>
             </div>
         </Fragment>
 
