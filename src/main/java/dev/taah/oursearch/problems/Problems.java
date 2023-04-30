@@ -1,5 +1,6 @@
 package dev.taah.oursearch.problems;
 
+import dev.taah.oursearch.problems.impl.SearchInRotatedArray;
 import dev.taah.oursearch.problems.impl.TwoSum;
 import lombok.Getter;
 import lombok.experimental.Accessors;
@@ -13,7 +14,8 @@ import lombok.experimental.Accessors;
 @Accessors(fluent = true)
 @Getter
 public enum Problems {
-    TWO_SUM(0x01, TwoSum.class);
+    TWO_SUM(0x01, TwoSum.class),
+    SEARCH_IN_ROTATED_SORTED_ARRAY(33, SearchInRotatedArray.class);
 
     private final int identifier;
     private final Class<? extends AbstractProblem> problem;

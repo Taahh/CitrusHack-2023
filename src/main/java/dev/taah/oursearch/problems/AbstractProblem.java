@@ -25,6 +25,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public abstract class AbstractProblem {
     private final String problemName;
+    private final int problemId;
     private final Map<DockerExecution.Language, String> templates = Maps.newHashMap();
 
     @SneakyThrows

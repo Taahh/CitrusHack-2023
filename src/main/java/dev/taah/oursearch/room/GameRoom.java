@@ -25,8 +25,8 @@ import java.util.UUID;
 public class GameRoom {
     private final UUID roomId;
     private final String gameCode = RandomStringUtils.randomAlphabetic(12).toUpperCase();
-    private UUID owner;
     private final LinkedList<UUID> members = new LinkedList<>();
-    private final transient Map<UUID, UserSession> sessions = Maps.newHashMap();
+    private final Map<UUID, UserSession> sessions = Maps.newHashMap();
+    private UUID owner;
     private String roomName;
 }

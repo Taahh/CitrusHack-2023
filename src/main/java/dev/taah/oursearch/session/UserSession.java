@@ -2,10 +2,12 @@ package dev.taah.oursearch.session;
 
 import com.google.api.client.util.Lists;
 import com.google.common.collect.Maps;
+import dev.taah.oursearch.docker.DockerExecution;
 import dev.taah.oursearch.problems.AbstractProblem;
 import dev.taah.oursearch.problems.Problems;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.lang.reflect.Constructor;
@@ -21,9 +23,11 @@ import java.util.UUID;
 
 @Accessors(fluent = true)
 @Getter
+@Setter
 public class UserSession {
     private final UUID uuid;
     private final List<AbstractProblem> problemsList = Lists.newArrayList();
+    private DockerExecution.Language selected = DockerExecution.Language.PYTHON;
 
     public UserSession(UUID uuid) {
         this.uuid = uuid;

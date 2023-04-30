@@ -3,6 +3,8 @@ package dev.taah.oursearch.web;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.gson.Gson;
 import dev.taah.oursearch.OurSearch;
+import dev.taah.oursearch.docker.DockerExecution;
+import dev.taah.oursearch.problems.AbstractProblem;
 import dev.taah.oursearch.room.GameRoom;
 import dev.taah.oursearch.room.RoomManager;
 import dev.taah.oursearch.session.UserSession;
@@ -167,5 +169,41 @@ public class RoomController {
         }
 
         return new ResponseEntity<>(object.toString(), HttpStatus.OK);
+    }
+
+    @GetMapping("/api/sessions/{uid}")
+    public ResponseEntity<String> getUserSession(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @PathVariable String uid) {
+        if (!auth.equals(WebService.authKey())) {
+            return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
+        }
+        final UUID uuid = UUID.fromString(uid);
+        final GameRoom gameRoom = RoomManager.findRoom(uuid);
+        if (gameRoom == null) {
+            return new ResponseEntity<>("User is not in a game room", HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(GSON.toJson(gameRoom.sessions().get(uuid)), HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/api/sessions/update/{uid}", consumes = {MediaType.APPLICATION_JSON_VALUE})
+    public ResponseEntity<String> updateUserSession(@RequestHeader(HttpHeaders.AUTHORIZATION) String auth, @PathVariable String uid, @RequestBody String json) {
+        if (!auth.equals(WebService.authKey())) {
+            return new ResponseEntity<>("Invalid authorization key", HttpStatus.FORBIDDEN);
+        }
+        final UUID uuid = UUID.fromString(uid);
+        final GameRoom gameRoom = RoomManager.findRoom(uuid);
+        if (gameRoom == null) {
+            return new ResponseEntity<>("User is not in a game room", HttpStatus.BAD_REQUEST);
+        }
+        final JSONObject object = new JSONObject(json);
+        final DockerExecution.Language language = DockerExecution.Language.valueOf(object.getString("language").toUpperCase());
+        final DockerExecution.Language newLanguage = DockerExecution.Language.valueOf(object.getString("newLanguage").toUpperCase());
+        final int identifier = object.getInt("problemId");
+        final String code = object.getString("code");
+        AbstractProblem abstractProblem = gameRoom.sessions().get(uuid).problemsList().stream().filter(problem -> problem.problemId() == identifier).findFirst().orElse(null);
+        if (abstractProblem != null) {
+            abstractProblem.templates().put(language, code);
+        }
+        gameRoom.sessions().get(uuid).selected(newLanguage);
+        return new ResponseEntity<>(GSON.toJson(gameRoom.sessions().get(uuid)), HttpStatus.OK);
     }
 }
